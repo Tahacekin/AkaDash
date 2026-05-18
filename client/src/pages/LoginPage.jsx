@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
-/** Try Vite proxy first, then direct API (dev) if the proxy fails. */
 async function fetchAuthStatus() {
   const parse = async (res) => {
     if (!res.ok) throw new Error('bad status');
@@ -11,9 +10,7 @@ async function fetchAuthStatus() {
   try {
     return await parse(await fetch('/api/auth/status'));
   } catch {
-    return await parse(
-      await fetch('http://127.0.0.1:3000/api/auth/status')
-    );
+    return await parse(await fetch('http://127.0.0.1:3000/api/auth/status'));
   }
 }
 
@@ -43,19 +40,19 @@ function GoogleIcon() {
 export function LoginPage() {
   const { user, loading } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [flashError, setFlashError] = useState(null);
+  const [flashError] = useState(() => searchParams.get('error'));
   const [apiStatus, setApiStatus] = useState(
     /** @type {'loading' | 'ok' | 'no_oauth' | 'error'} */ ('loading')
   );
 
-  const errParam = searchParams.get('error');
-
   useEffect(() => {
-    if (errParam) {
-      setFlashError(errParam);
+    if (searchParams.get('error')) {
       setSearchParams({}, { replace: true });
     }
-  }, [errParam, setSearchParams]);
+    // Intentionally only run on mount: we snapshot the URL error once via the
+    // initial state above, then strip the query so it does not stick around.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

@@ -12,9 +12,9 @@ export function AppShell({ children, user, onLogout }) {
       <header className="top-bar">
         <div className="top-bar__brand">
           <Link to="/" className="top-bar__logo">
-            Brief
+            AkaDash
           </Link>
-          <span className="top-bar__tagline">One place for every deadline</span>
+          <span className="top-bar__tagline">Your week, in one place.</span>
         </div>
         <div className="top-bar__user">
           {user ? (

@@ -1,13 +1,14 @@
 import {
   createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
+import { api } from '../lib/api';
 
-const AuthContext = createContext(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext(null);
 
 /**
  * @typedef {{ email: string, name: string }} User
@@ -19,12 +20,7 @@ export function AuthProvider({ children }) {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch('/api/me', { credentials: 'include' });
-      if (!res.ok) {
-        setUser(null);
-        return;
-      }
-      const data = await res.json();
+      const data = await api.get('/api/auth/me');
       setUser(data.user);
     } catch {
       setUser(null);
@@ -39,7 +35,7 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(async () => {
     try {
-      await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+      await api.post('/api/auth/logout');
     } catch {
       /* ignore */
     }
@@ -57,15 +53,5 @@ export function AuthProvider({ children }) {
     [user, loading, refresh, logout]
   );
 
-  return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-  );
-}
-
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return ctx;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
