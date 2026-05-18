@@ -1,0 +1,31 @@
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+client/dist/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Trust anchors we ship intentionally (public Sectigo intermediate for Moodle).
+# Keep this exception in case a broader *.pem rule is ever added above.
+!server/certs/*.pem
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

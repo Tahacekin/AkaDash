@@ -1,8 +1,13 @@
 {
   "name": "akadash",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "dev": "node scripts/dev.cjs",
+    "dev:server": "node server.js",
+    "dev:client": "npm run dev --prefix client",
+    "start": "node server.js",
+    "build": "npm run build --prefix client",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -10,6 +15,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^5.2.1"
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.2.1",
+    "googleapis": "^171.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "undici": "^7.25.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

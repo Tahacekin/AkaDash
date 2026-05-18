@@ -1,11 +1,19 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+const { createApp } = require('./server/app');
+const { PORT } = require('./server/config');
 
-app.get('/', (req, res) => {
-  res.send('<h1>AkaDash</h1>');
+const app = createApp();
+
+const server = app.listen(PORT, () => {
+  console.log(`AkaDash API listening at http://localhost:${PORT}`);
 });
 
-app.listen(port, () => {
-  console.log(`Server at http://localhost:${port}`);
-});
+function shutdown(signal) {
+  console.log(`[AkaDash] ${signal} received, closing server…`);
+  server.close(() => process.exit(0));
+  setTimeout(() => process.exit(0), 2000).unref();
+}
+
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+
+module.exports = { app, server };
